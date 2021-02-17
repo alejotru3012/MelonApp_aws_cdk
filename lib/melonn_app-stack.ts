@@ -2,6 +2,8 @@ import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as apigateway from '@aws-cdk/aws-apigateway';
 import * as lambda from '@aws-cdk/aws-lambda';
+import * as amplify from '@aws-cdk/aws-amplify';
+import * as codebuild from '@aws-cdk/aws-codebuild';
 require('dotenv').config()
 
 interface CustomStackProps{
@@ -34,13 +36,6 @@ export class MelonnAppStack extends cdk.Stack {
       ],
 
     })
-
-    // create security group
-    // const securityGroup = new ec2.SecurityGroup(this, `securityGroup`, {
-    //   vpc: vpc,
-    //   securityGroupName: `sg_melonn`
-    // });
-    // securityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(3306), 'from anywhere');
 
     // create Api Gateway
     const api = new apigateway.RestApi(this, `api`, {
@@ -90,11 +85,7 @@ export class MelonnAppStack extends cdk.Stack {
           URL_SHIPPING_DETAILS : process.env.MELONN_SHIPPING_DETAILS_URL || '',
           SHIPPING_KEY : process.env.MELON_API_KEY || ''
         },
-        // vpc: vpc,
-        // securityGroups: [
-        //   securityGroup
-        // ]
-        // allowPublicSubnet: true
+
       });
 
       const resource = api.root.resourceForPath(`${element.path}`);
@@ -105,6 +96,55 @@ export class MelonnAppStack extends cdk.Stack {
       });
 
     });
+
+
+    // const amplifyApp = new amplify.App(this, `amplify_melonn`, {
+    //   sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
+    //     owner: process.env.AMPLIFY_REPO_OWNER || '',
+    //     repository: process.env.AMPLIFY_REPOSITORY || '',
+    //     oauthToken: cdk.SecretValue.plainText(process.env.AMPLIFY_GIT_TOKEN || '')
+    //   }),
+    //   buildSpec: codebuild.BuildSpec.fromObject({ // Alternatively add a `amplify.yml` to the repo
+    //     version: '1',
+    //     frontend: {
+    //       phases: {
+    //         preBuild: {
+    //           commands: [
+    //             'npm ci'
+    //           ]
+    //         },
+    //         build: {
+    //           commands: [
+    //             'npm run build'
+    //           ]
+    //         }
+    //       },
+    //       artifacts: {
+    //         baseDirectory: 'build',
+    //         files: '**/*'
+    //       },
+    //       cache: {
+    //         paths: [
+    //           'node_modules/**/*'
+    //         ]
+    //       }
+    //     }
+    //   }),
+    //   appName: `cdk_melonn`,
+    //   environmentVariables: {
+    //     REACT_APP_API_URL: api.urlForPath(),
+    //     REACT_APP_API_KEY: process.env.API_KEY_VALUE || '',
+
+    //     REACT_APP_MELONN_URL: process.env.MELONN_URL || '',
+    //     REACT_APP_MELONN_KEY: process.env.MELONN_KEY || ''
+    //   },
+
+    // });
+
+    // amplifyApp.addBranch('master', {
+    //   autoBuild: true,
+    //   pullRequestPreview: false,
+    // });
 
   }
 }
