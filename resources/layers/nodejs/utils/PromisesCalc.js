@@ -36,7 +36,7 @@ module.exports = class PromisesCalculator {
     validateWeight() {
         const items = this.order.items;
         let orderWeight = 0;
-        items.forEach(item => orderWeight += item.product_weight);
+        items.forEach(item => orderWeight += (item.product_weight * item.product_qty));
         const minWeight = this.sh_details.rules.availability.byWeight.min;
         const maxWeight = this.sh_details.rules.availability.byWeight.max;
         if (orderWeight >= minWeight && orderWeight <= maxWeight)

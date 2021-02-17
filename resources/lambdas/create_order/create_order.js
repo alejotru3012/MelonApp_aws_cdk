@@ -8,35 +8,11 @@ const PromisesCalculator = require('/opt/nodejs/utils/PromisesCalc');
 exports.handler = async (event) => {
     // TODO implement
 
-    // if (!('body' in event) || event.body == null || !Ut.isJson(event.body)) {
-    //     return Ut.response(400, 'Hay problemas con el mensaje');
-    // }
-    // let pedido = JSON.parse(event.body);
-
-    let order = {
-        seller_store: "med",
-        shipping_method: 2,
-        external_order_number: "12345",
-        buyer_full_name: "ale",
-        buyer_phone_number: "truj",
-        buyer_email: "ale@truji.com",
-        shipping_address: "car 3",
-        shipping_city: "med",
-        shipping_region: "reg",
-        shipping_country: "col",
-        items: [
-            {
-                product_name: "item1",
-                product_qty: 2,
-                product_weight: 20
-            }//,
-            // {
-            //     product_name: "item2",
-            //     product_qty: "1",
-            //     product_weight: "90"
-            // }
-        ]
+    if (!('body' in event) || event.body == null || !Ut.isJson(event.body)) {
+        return Ut.response(400, 'Hay problemas con el mensaje');
     }
+    let order = JSON.parse(event.body);
+
     let sh_details = null;
     let offDays = null;
     try {
